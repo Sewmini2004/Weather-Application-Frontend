@@ -1,0 +1,23 @@
+body {
+  background-color: #1a202c !important; 
+  color: #f8f9fa;
+}
+
+.weather-app-container {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  min-height: 100vh;
+}
+
+.card-custom-bg-1 { background-color: #0077c2 !important; }
+.card-custom-bg-2 { background-color: #8a2be2 !important; }
+.card-custom-bg-3 { background-color: #3cb371 !important; }
+.card-custom-bg-4 { background-color: #e07a5f !important; }
+.card-custom-bg-5 { background-color: #b22222 !important; }
+
+.single-view-container-blue {
+  background-color: rgba(30, 144, 255, 0.9) !important; 
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+}
+.single-view-details-dark {
+  background-color: rgba(52, 58, 64, 0.8) !important; 
+}
