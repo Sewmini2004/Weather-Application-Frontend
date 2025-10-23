@@ -1,5 +1,6 @@
+// src/components/Weather/WeatherCard.jsx
 import React from 'react';
-import { kelvinToCelsius, formatTime, getWeatherIcon } from '../../utils/weatherUtils';
+import { formatTime, getWeatherIcon } from '../../utils/weatherUtils'; // ❌ kelvinToCelsius removed
 import { Card, Row, Col, Button } from 'react-bootstrap';
 
 /**
@@ -8,12 +9,17 @@ import { Card, Row, Col, Button } from 'react-bootstrap';
 const WeatherCard = ({ data, onSelectCity, colorClass, onDelete }) => {
     if (!data) return null;
 
-    const { name, main, weather, sys, wind, visibility } = data;
-    const tempC = kelvinToCelsius(main.temp);
-    const tempMinC = kelvinToCelsius(main.temp_min);
-    const tempMaxC = kelvinToCelsius(main.temp_max);
+    const { name, main, weather, sys, wind, visibility, id } = data;
+    
+    // ✅ Use Celsius values directly from the API response (since units=metric is used)
+    const tempC = Math.round(main.temp);
+    const tempMinC = Math.round(main.temp_min);
+    const tempMaxC = Math.round(main.temp_max);
+    
     const icon = getWeatherIcon(weather[0].description);
-    const timeString = '9.19am, Feb 8';
+    // You should use data.dt (date/time) to calculate the actual time if needed, 
+    // but sticking to the mock format for visual consistency:
+    const timeString = new Date(data.dt * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) + ', ' + new Date(data.dt * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
     return (
         <Card 
@@ -33,7 +39,7 @@ const WeatherCard = ({ data, onSelectCity, colorClass, onDelete }) => {
                     <Button
                         variant="link"
                         className="text-white p-0 fs-5 lh-1"
-                        onClick={(e) => { e.stopPropagation(); onDelete(data.id); }}
+                        onClick={(e) => { e.stopPropagation(); onDelete(id); }}
                         aria-label="Delete City"
                     >
                         &times;
@@ -60,7 +66,8 @@ const WeatherCard = ({ data, onSelectCity, colorClass, onDelete }) => {
                         <Col xs={6}>
                             <p className="mb-0">Pressure: {main.pressure}hPa</p>
                             <p className="mb-0">Humidity: {main.humidity}%</p>
-                            <p className="mb-0">Visibility: {(visibility / 1000).toFixed(1)}km</p>
+                            {/* Visibility is in meters, converting to KM */}
+                            <p className="mb-0">Visibility: {(visibility / 1000).toFixed(1)}km</p> 
                         </Col>
                         <Col xs={6} className="d-flex flex-column align-items-end">
                             <div className="d-flex align-items-center mb-1">

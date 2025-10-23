@@ -1,5 +1,6 @@
+// src/pages/SingleCityView.jsx
 import React from 'react';
-import { kelvinToCelsius, formatTime, getWeatherIcon } from '../utils/weatherUtils';
+import { formatTime, getWeatherIcon } from '../utils/weatherUtils'; // ❌ kelvinToCelsius removed
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
 /**
@@ -14,11 +15,15 @@ const SingleCityView = ({ data, onBack }) => {
     );
     
     const { name, main, weather, sys, wind, visibility } = data;
-    const tempC = kelvinToCelsius(main.temp);
-    const tempMinC = kelvinToCelsius(main.temp_min);
-    const tempMaxC = kelvinToCelsius(main.temp_max);
+    
+    // ✅ Use Celsius values directly from the API response
+    const tempC = Math.round(main.temp);
+    const tempMinC = Math.round(main.temp_min);
+    const tempMaxC = Math.round(main.temp_max);
+
     const icon = getWeatherIcon(weather[0].description);
-    const timeString = '9.19am, Feb 8';
+    const timeString = new Date(data.dt * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) + ', ' + new Date(data.dt * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
 
     return (
         <Container className="py-4 py-md-5">
