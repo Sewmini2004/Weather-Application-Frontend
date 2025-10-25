@@ -1,41 +1,54 @@
-// src/hooks/useWeather.js
 import { useState, useCallback } from 'react';
 import { WEATHER_API_ENDPOINT } from '../utils/weatherUtils';
+import { useAuth } from '../components/Auth/Auth0ProviderWrapper'; 
+import { auth0Config } from '../Auth0Config';
 
-/**
- * Custom hook to manage weather data fetching (Calls the Backend API).
- */
+
 export const useWeather = () => {
+    const { getAccessTokenSilently, isAuthenticated } = useAuth(); 
+    
     const [weatherDataArray, setWeatherDataArray] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
     const fetchAllWeather = useCallback(async () => {
+        
+        if (!isAuthenticated) {
+            setError("You must log in to access weather data.");
+            setWeatherDataArray([]); 
+            setIsLoading(false);
+            return;
+        }
+
         setIsLoading(true);
         setError(null);
         
         try {
-            console.log(`[API Call] Fetching data from Backend: ${WEATHER_API_ENDPOINT}`);
+            const accessToken = await getAccessTokenSilently({
+                authorizationParams: {
+                    audience: auth0Config.audience, 
+                }
+            });
+            
+            console.log("Access Token Obtained successfully.");
 
-            const response = await fetch(WEATHER_API_ENDPOINT);
+            const response = await fetch(WEATHER_API_ENDPOINT, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
             
             if (!response.ok) {
-                // Attempt to parse error message from response body
-                const errorText = await response.text();
-                let errorMessage = `Backend API call failed with status ${response.status}.`;
-                try {
-                    const errorBody = JSON.parse(errorText);
-                    errorMessage = errorBody.message || errorMessage;
-                } catch {
-                    // Ignore JSON parse error if response is not JSON
-                    errorMessage = errorText || errorMessage;
+              
+                if (response.status === 401 || response.status === 403) {
+                     throw new Error("Access Denied: You are not authorized to view this data.");
                 }
-                throw new Error(errorMessage);
+                const errorText = await response.text();
+                throw new Error(`API call failed: ${response.status} - ${errorText.substring(0, 50)}`);
             }
             
             const data = await response.json();
-            
-            // The data is an array of full OpenWeatherMap response objects
             setWeatherDataArray(data);
 
         } catch (err) {
@@ -45,7 +58,7 @@ export const useWeather = () => {
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [getAccessTokenSilently, isAuthenticated]); 
 
     return { 
         weatherDataArray, 

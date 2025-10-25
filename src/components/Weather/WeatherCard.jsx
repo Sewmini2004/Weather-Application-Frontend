@@ -1,24 +1,19 @@
-// src/components/Weather/WeatherCard.jsx
-import React from 'react';
-import { formatTime, getWeatherIcon } from '../../utils/weatherUtils'; // ❌ kelvinToCelsius removed
+import React from 'react';  
+import { formatTime, getWeatherIcon } from '../../utils/weatherUtils';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 
-/**
- * Component for a single weather card on the dashboard (using Bootstrap).
- */
 const WeatherCard = ({ data, onSelectCity, colorClass, onDelete }) => {
     if (!data) return null;
 
     const { name, main, weather, sys, wind, visibility, id } = data;
     
-    // ✅ Use Celsius values directly from the API response (since units=metric is used)
+    //  Use Celsius values directly from the API response (since units=metric is used)
     const tempC = Math.round(main.temp);
     const tempMinC = Math.round(main.temp_min);
     const tempMaxC = Math.round(main.temp_max);
     
     const icon = getWeatherIcon(weather[0].description);
-    // You should use data.dt (date/time) to calculate the actual time if needed, 
-    // but sticking to the mock format for visual consistency:
+   
     const timeString = new Date(data.dt * 1000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) + ', ' + new Date(data.dt * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
     return (
@@ -30,7 +25,6 @@ const WeatherCard = ({ data, onSelectCity, colorClass, onDelete }) => {
             onClick={() => onSelectCity(data)}
         >
             <Card.Body className="d-flex flex-column">
-                {/* Header: City Name and Delete Button */}
                 <div className="d-flex justify-content-between align-items-start mb-3">
                     <div>
                         <Card.Title className="mb-0 fw-bold">{name}</Card.Title>
@@ -66,7 +60,6 @@ const WeatherCard = ({ data, onSelectCity, colorClass, onDelete }) => {
                         <Col xs={6}>
                             <p className="mb-0">Pressure: {main.pressure}hPa</p>
                             <p className="mb-0">Humidity: {main.humidity}%</p>
-                            {/* Visibility is in meters, converting to KM */}
                             <p className="mb-0">Visibility: {(visibility / 1000).toFixed(1)}km</p> 
                         </Col>
                         <Col xs={6} className="d-flex flex-column align-items-end">

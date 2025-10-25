@@ -1,11 +1,7 @@
-// src/pages/SingleCityView.jsx
 import React from 'react';
-import { formatTime, getWeatherIcon } from '../utils/weatherUtils'; // ❌ kelvinToCelsius removed
+import { formatTime, getWeatherIcon } from '../utils/weatherUtils'; 
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
-/**
- * Detailed view for a single city (using Bootstrap).
- */
 const SingleCityView = ({ data, onBack }) => {
     if (!data) return (
         <Container className="text-white text-center fs-5 p-5">
@@ -16,7 +12,6 @@ const SingleCityView = ({ data, onBack }) => {
     
     const { name, main, weather, sys, wind, visibility } = data;
     
-    // ✅ Use Celsius values directly from the API response
     const tempC = Math.round(main.temp);
     const tempMinC = Math.round(main.temp_min);
     const tempMaxC = Math.round(main.temp_max);
@@ -59,11 +54,9 @@ const SingleCityView = ({ data, onBack }) => {
                     </div>
                 </div>
 
-                {/* Bottom Details (Responsive Grid) */}
                 <div className="p-4 p-md-5 single-view-details-dark text-white small" style={{ borderRadius: '0 0 15px 15px' }}>
                     <Row className="g-4 g-md-5">
                         
-                        {/* Column 1: Pressure/Humidity/Visibility */}
                         <Col xs={12} md={4} className="border-end-md border-secondary">
                             <p className="fw-medium mb-1">Pressure: <span className="fw-light">{main.pressure}hPa</span></p>
                             <p className="fw-medium mb-1">Humidity: <span className="fw-light">{main.humidity}%</span></p>

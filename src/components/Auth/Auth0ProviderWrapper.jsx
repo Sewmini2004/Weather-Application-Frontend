@@ -1,65 +1,28 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
-
-// A mock user object for careers@fidenz.com
-const MOCK_USER = {
-    nickname: 'fidenz',
-    name: 'careers@fidenz.com',
-    email: 'careers@fidenz.com',
-    picture: 'https://placehold.co/40x40/007AFF/ffffff?text=F',
-};
-
-const AuthContext = createContext();
+import React, { createContext, useContext } from 'react';
+import { Auth0Provider, useAuth0 } from '@auth0/auth0-react'; 
+import { auth0Config } from '../../Auth0Config';
 
 /**
- * Mock implementation of the Auth0 hook.
- */
-const useAuth0 = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        setTimeout(() => {
-            setIsAuthenticated(false); // Start unauthenticated
-            setIsLoading(false);
-        }, 500);
-    }, []);
-
-    const loginWithRedirect = () => {
-        setIsLoading(true);
-        console.log("Simulating Auth0 Login: careers@fidenz.com / Pass#fidenz");
-        setTimeout(() => {
-            setIsAuthenticated(true);
-            setIsLoading(false);
-        }, 1000);
-    };
-
-    const logout = () => {
-        setIsLoading(true);
-        console.log("Simulating Auth0 Logout");
-        setTimeout(() => {
-            setIsAuthenticated(false);
-            setIsLoading(false);
-        }, 500);
-    };
-
-    return {
-        isAuthenticated,
-        isLoading,
-        user: MOCK_USER,
-        loginWithRedirect,
-        logout,
-    };
-};
-
-/**
- * Auth0 Context Provider Wrapper
+ * Auth0 Context Provider Wrapper (Uses the real Auth0Provider)
  */
 export const Auth0ProviderWrapper = ({ children }) => {
-    const auth = useAuth0(); 
-    return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+    
+    const providerConfig = {
+        domain: auth0Config.domain,
+        clientId: auth0Config.clientId,
+        authorizationParams: {
+            redirect_uri: auth0Config.redirectUri,
+            audience: auth0Config.audience, 
+            scope: "openid profile email", 
+        }
+    };
+    
+    return <Auth0Provider {...providerConfig}>{children}</Auth0Provider>;
 };
 
 /**
- * Custom hook to use the Auth context.
+ * Custom hook to use the Auth context (Returns the real useAuth0 hook).
  */
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    return useAuth0(); 
+};  

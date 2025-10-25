@@ -9,7 +9,6 @@ const Header = ({ isLoading }) => {
                     <span className="text-3xl mr-2">⛈️</span>
                     Weather App
                 </h1>
-                {/* Only show AuthButtons when we are not in the initial loading state */}
                 {!isLoading && <AuthButtons />}
             </div>
         </header>

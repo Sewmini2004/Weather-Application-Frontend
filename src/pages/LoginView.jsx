@@ -21,11 +21,7 @@ const LoginView = () => {
                 <Card.Text className="small text-center text-light mb-3">
                     Log in with the pre-configured test account (Restricted Signups).
                 </Card.Text>
-                
-                <div className="text-start bg-secondary bg-opacity-25 p-3 rounded mb-4 small text-light font-monospace">
-                    <p className="mb-1">📧 User: <span className="fw-bold text-white">careers@fidenz.com</span></p>
-                    <p className="mb-0">🔑 Pass: <span className="fw-bold text-white">Pass#fidenz</span></p>
-                </div>
+    
 
                 <Button
                     onClick={() => loginWithRedirect()}
@@ -33,7 +29,7 @@ const LoginView = () => {
                     className="w-100 py-2 fs-5 fw-semibold shadow-sm"
                 >
                     <span className="me-2">🔐</span>
-                    Log In via Auth0
+                    Log In 
                 </Button>
                 
                 <p className="mt-4 text-muted small">

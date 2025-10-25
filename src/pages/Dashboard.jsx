@@ -11,16 +11,13 @@ import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
 const Dashboard = ({ onSelectCity }) => {
     const { weatherDataArray, fetchAllWeather, isLoading, error } = useWeather();
     
-    // Fetch data on component mount
     useEffect(() => {
         fetchAllWeather();
     }, [fetchAllWeather]);
 
     const handleCardDelete = useCallback((id) => {
-        // You would typically call a backend API here to remove the city permanently.
         console.log(`Simulated deletion of city ID: ${id}`);
-        // To remove from UI instantly, you'd update the weatherDataArray state,
-        // but for this demo, we only log the action.
+       
     }, []);
 
     if (isLoading) {
@@ -59,7 +56,6 @@ const Dashboard = ({ onSelectCity }) => {
 
     return (
         <Container className="py-4 py-md-5">
-            {/* Input Bar (Disabled) - No change here */}
              <div className="d-flex justify-content-center mb-5 mx-auto" style={{ maxWidth: '500px' }}>
                 <Form.Control 
                     type="text" 
@@ -84,7 +80,7 @@ const Dashboard = ({ onSelectCity }) => {
                     return (
                         <Col key={data.id}>
                             <WeatherCard 
-                                data={data} // Full OpenWeatherMap object
+                                data={data} 
                                 onSelectCity={onSelectCity} 
                                 colorClass={colorClass}
                                 onDelete={handleCardDelete}
